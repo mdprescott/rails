@@ -1,0 +1,53 @@
+<div class="text-center">
+  <h1><strong><%= @user.first_last %></strong></h1>
+  <h3><strong>Customer <%= @user.id %></strong></h3>
+  <%= link_to 'Edit Name', edit_user_path(@user) %>
+  <p id="notice"><%= notice %></p>
+</div>
+
+<div class="text-center">
+  <p>
+    <strong>Orders:</strong>
+  </p>
+
+  <% @carts = Cart.where(user_id: params[:id]) %>
+  <% if @carts.count == 0 %>
+  No orders yet!
+  <% else %>
+  <% @carts.each do |cart| %>
+  <div>
+    <%= link_to 'Order Created On: ' +cart.created_at.strftime("%A %b %d, %Y").to_s, cart %>
+  </div>
+    <% end %>
+  <% end %>
+</div>
+
+<br>
+
+<div class="text-center">
+  <p>
+    <strong>Total Spend:</strong>
+  </p>
+
+  <% @carts = OrderItem.joins(:cart).where(carts: {user_id: params[:id]}) %>
+  <% @costs = [] %>
+  <% @carts.each do |item| %>
+  <% item_cost = item.product.price * item.quantity %>
+  <% @costs << item_cost %>
+  <% @total_cost = @costs.inject(0){|sum,x| sum + x } %>
+  <% end %>
+  <% if @total_cost.nil? %>
+  $0.00
+  <% else %>
+  $<%= '%.2f' % @total_cost %>
+  <% end %>
+</div>
+
+<br>
+
+<div class="text-center">
+  <%= link_to 'Back', users_path %>
+  <div>
+    <%= link_to 'Home', root_path %>
+  </div>
+</div>

@@ -1,0 +1,45 @@
+<div class="text-center">
+  <h1><strong>Welcome to Baby Carrot</strong></h1>
+  <p><em>Get it? It's like a mini version of Instacart... or Carrots... okay I'll stop now.</em></p>
+  <p id="notice"><%= notice %></p>
+</div>
+
+<div class="text-center">
+  <h2><%= link_to 'Place Order', new_cart_path %></h2>
+</div>
+
+<br>
+<div class="container">
+  <div class="row">
+    <div class="col-6">
+      <table class="text-center mx-auto">
+        <thead>
+          <th>Quick Store Links:</th>
+        </thead>
+        <tbody>
+          <% @stores_limit = Store.all.order('created_at ASC').take(5) %>
+          <% @stores_limit.each do |store| %>
+              <tr>
+                <td><%= link_to store.name, store_path(store) %></td>
+              </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-6">
+      <table class="text-center mx-auto">
+        <thead>
+          <th>Admin Management Links:</th>
+        </thead>
+        <tbody>
+          <tr>
+            <td><%= link_to 'Store Management', stores_path %></td>
+          </tr>
+          <tr>
+            <td><%= link_to 'User Management', users_path %></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

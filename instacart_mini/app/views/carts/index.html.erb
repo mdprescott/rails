@@ -1,0 +1,32 @@
+<div class="text-center">
+  <h1><strong>All Carts</strong></h1>
+  <p id="notice"><%= notice %></p>
+  <%= link_to 'New Cart', new_cart_path %>
+</div>
+
+<br>
+
+<table class="text-center mx-auto">
+  <thead>
+    <tr>
+      <th colspan="4">Carts</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @carts.each do |cart| %>
+      <tr>
+        <td><%= cart.user.first_name + ' ' + cart.user.last_name + "'s Cart - " + cart.created_at.strftime("%A %b %d, %Y")%></td>
+        <td><%= link_to 'Show', cart %></td>
+        <td><%= link_to 'Edit', edit_cart_path(cart) %></td>
+        <td><%= link_to 'Destroy', cart, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<div class="text-center">
+  <%= link_to 'Home', root_path %>
+</div>

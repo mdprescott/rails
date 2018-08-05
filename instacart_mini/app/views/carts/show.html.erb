@@ -1,0 +1,83 @@
+
+<div class="text-center">
+  <p>
+    <h2><strong>Customer:</strong>
+    <%= @cart.user.first_last %></h2>
+  </p>
+  <p>
+    <h3><strong>Order Date:</strong>
+    <%= @cart.created_at.strftime("%A %b %d, %Y") %></h3>
+  </p>
+  <p id="notice"><%= notice %></p>
+
+
+<table class="mx-auto">
+  <thead>
+    <tr>
+      <th>Add Items From:</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @stores = Store.all.order('created_at ASC') %>
+    <% @stores.each do |store| %>
+        <tr>
+          <td><%= link_to store.name, new_order_item_url(params[:id], store.id) %></td>
+        </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<p>
+  <strong>Current Shopping Cart:</strong>
+</p>
+<table class="mx-auto text-center">
+  <% @order_items = OrderItem.all %>
+  <% cart_items = @order_items.where(cart_id: params[:id]) %>
+  <% if cart_items.count == 0 %>
+  <p>Nothing here yet! Add items by clicking one of the store options above.</p>
+  <% else %>
+  <% cart_stores = cart_items.distinct.pluck(:store_id) %>
+  <% cart_stores.each do |store_id| %>
+  <% @store = Store.find(store_id) %>
+  <thead>
+    <tr>
+      <th colspan="5"><%= @store.name %></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% store_items = cart_items.where(store_id: store_id) %>
+    <% store_items.each do |order_item| %>
+      <tr>
+        <td><%= order_item.product.title %></td>
+        <td>$<%='%.2f' % order_item.product.price %></td>
+        <td><%= order_item.quantity %></td>
+        <td><%= link_to 'Edit', edit_order_item_url(order_item.cart_id, order_item.store_id, order_item.id) %></td>
+        <td><%= link_to 'Remove', order_item_url(order_item.cart_id, order_item.store_id, order_item.id), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+  <% end %>
+  <% end %>
+</table>
+
+<p>
+  <strong>Current Total:</strong>
+  <% @costs = []%>
+  <% cart_items.each do |item| %>
+  <% cost = item.product.price * item.quantity %>
+  <% @costs << cost %>
+  <% @total_cost = @costs.inject(0){|sum,x| sum + x } %>
+  <% end %>
+  <% if @total_cost.nil? %>
+  $0.00
+  <% else %>
+  $<%= '%.2f' % @total_cost %>
+  <% end %>
+</p>
+
+
+
+<%= link_to 'Change Customer', edit_cart_path(@cart) %> | <td><%= link_to 'Delete Cart', cart_path, method: :delete, data: { confirm: 'Are you sure? This will also delete all items in the cart.' } %></td> | <%= link_to 'Home', root_path %>
+</div>

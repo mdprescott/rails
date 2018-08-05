@@ -1,0 +1,13 @@
+<div class="text-center">
+  <h1>Editing Order Item</h1>
+
+  <br>
+
+  <%= render 'form_one', order_item: @order_item %>
+
+  <br>
+
+  <%= link_to 'Remove', order_item_url(params[:cart_id], params[:store_id], params[:id]), method: :delete, data: { confirm: 'Are you sure?' } %> |
+  <%= link_to 'Show', @order_item %> |
+  <%= link_to 'Back', cart_url(@order_item.cart_id) %>
+</div>
